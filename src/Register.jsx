@@ -3,7 +3,13 @@ import "./Register.css";
 import { useForm } from "react-hook-form";
 
 const Register = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      username: "Zohani",
+      email: "zohani@flyfar.tech",
+      password: "12345678",
+    },
+  });
 
   const onSubmit = (data) => {
     console.log("data", data);
@@ -13,15 +19,15 @@ const Register = () => {
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
       <div className="field">
         <label className="label">Username</label>
-        <input type="text" className="input" />
+        <input {...register("username")} type="text" className="input" />
       </div>
       <div className="field">
         <label className="label">Email</label>
-        <input type="text" className="input" />
+        <input {...register("email")} type="text" className="input" />
       </div>
       <div className="field">
         <label className="label">Password</label>
-        <input type="password" className="input" />
+        <input {...register("password")} type="password" className="input" />
       </div>
       <div>
         <button type="submit" className="button">
