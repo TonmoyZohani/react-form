@@ -5,18 +5,6 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 
-{
-  /* Custom Input*/
-}
-// const Input = ({ label, register }) => {
-//   return (
-//     <div className="field">
-//       <label className="label">{label.charAt(0).toUpperCase()+label.slice(1)}</label>
-//       <input {...register(label)} type="text" className="input" />
-//     </div>
-//   );
-// };
-
 const validationSchema = yup
   .object({
     username: yup.string().required("Missing username"),
@@ -26,7 +14,14 @@ const validationSchema = yup
       .required("Missing password")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
+    phone: yup
+      .string()
+      .required("Missing phone number")
+      .matches(
+        /^\+?[1-9]\d{1,14}$/,
+        "Phone number must be a valid E.164 format"
       ),
   })
   .required();
@@ -43,9 +38,10 @@ const Register = () => {
       username: "",
       email: "",
       password: "",
+      phone: "",
     },
   });
-  console.log("errors", errors);
+
   const onSubmit = (data) => {
     console.log("data", data);
     axios
@@ -73,10 +69,14 @@ const Register = () => {
             message: err.response.data.errors.password[0],
           });
         }
+        if (err.response.data.errors.phone) {
+          setError("phone", {
+            type: "server",
+            message: err.response.data.errors.phone[0],
+          });
+        }
       });
   };
-
-  console.log(errors);
 
   return (
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
@@ -98,6 +98,11 @@ const Register = () => {
         {errors.password && (
           <span className="error">{errors.password.message}</span>
         )}
+      </div>
+      <div className="field">
+        <label className="label">Phone</label>
+        <input {...register("phone")} type="text" className="input" />
+        {errors.phone && <span className="error">{errors.phone.message}</span>}
       </div>
       <div>
         <button type="submit" className="button">
