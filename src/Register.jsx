@@ -2,6 +2,15 @@ import React from "react";
 import "./Register.css";
 import { useForm } from "react-hook-form";
 
+const Input = ({ label, register }) => {
+  return (
+    <div className="field">
+      <label className="label">{label.charAt(0).toUpperCase()+label.slice(1)}</label>
+      <input {...register(label)} type="text" className="input" />
+    </div>
+  );
+};
+
 const Register = () => {
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -17,10 +26,8 @@ const Register = () => {
 
   return (
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
-      <div className="field">
-        <label className="label">Username</label>
-        <input {...register("username")} type="text" className="input" />
-      </div>
+        <Input label='username' register={register}/> 
+
       <div className="field">
         <label className="label">Email</label>
         <input {...register("email")} type="text" className="input" />
